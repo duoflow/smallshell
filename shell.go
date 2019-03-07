@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/duoflow/smallshell/api"
+	"github.com/duoflow/smallshell/cmd"
 )
 
 var (
@@ -37,7 +38,11 @@ func (shell *Goshell) Init(ctx context.Context) error {
 
 func (shell *Goshell) loadCommands() error {
 	// load sys commands
-
+	for name, cmd := range cmd.Commands.Registry() {
+		shell.commands[name] = cmd
+	}
+	// write context
+	shell.ctx = context.WithValue(shell.ctx, "shell.commands", shell.commands)
 	return nil
 }
 
